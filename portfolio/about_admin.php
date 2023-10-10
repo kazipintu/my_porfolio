@@ -1,6 +1,14 @@
 <?php 
     include 'db_config.php';
     $status = '';
+    $sel_sql = "SELECT * FROM about";
+    $result = mysqli_query($con, $sel_sql);
+    $num_rows = mysqli_num_rows($result);
+
+    
+    // var_dump($num_rows);
+
+    // die();
     if(isset($_POST['submit'])){
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -10,16 +18,27 @@
         $git = $_POST['git'];
         $research = $_POST['research'];
         $address = $_POST['address'];
-        $image = $_POST['image'];
+        // var_dump($_FILES['image']) ;
+        $image_data = $_FILES["image"]["tmp_name"];
+        $image_name = mysqli_real_escape_string($con, $_FILES["image"]["name"]);
+        // var_dump($image_name);
+        if($num_rows>0){
+            $status = "You have already data in your database";
+        }
+        
+        else{
+            $sql = "INSERT INTO about (name, email, phone, address, linkedin, facebook, github, research, image,image_data) VALUES ('$name','$email','$phone','$address','$linkdin','$fb','$git','$research','$image_name','$image_data')";
+            $query = mysqli_query($con,$sql);
+            if($query){
+                $status = "Inserted Successfully";
+            }
+            else{
+            $status = "Failed! Something went Wrong";
+            }
+            
+        }
 
-        $sql = "INSERT INTO about (name, email, phone, address, linkedin, facebook, github, research, image) VALUES ('$name','$email','$phone','$address','$linkdin','$fb','$git','$research','$image')";
-         $query = mysqli_query($con,$sql);
-         if($query){
-            $status = "Inserted Successfully";
-         }
-         else{
-          $status = "Failed! Something went Wrong";
-         }
+        
     }
 
 
@@ -61,7 +80,8 @@
                                 <span><?php echo $status; ?></span>
                                 <div class="card-body">
                                     <h4 class="card-title">About Me</h4>
-                                    <form class="forms-sample" method="POST" action="about_admin.php">
+                                    <form class="forms-sample" method="POST" action="about_admin.php"
+                                        enctype="multipart/form-data">
                                         <div class=" form-group">
                                             <label for="exampleInputName1">Name</label>
                                             <input type="text" class="form-control" id="exampleInputName1"
@@ -106,11 +126,11 @@
                                             <label>Image upload</label>
                                             <input type="file" name="img[]" class="file-upload-default">
                                             <div class="input-group col-xs-12">
-                                                <input type="text" class="form-control file-upload-info" disabled
+                                                <input type="file" class="form-control file-upload-info" 
                                                     placeholder="Upload Image" name="image">
                                                 <span class="input-group-append">
-                                                    <button class="file-upload-browse btn btn-primary"
-                                                        type="button">Upload</button>
+                                                    <!-- <button class="file-upload-browse btn btn-primary"
+                                                        type="button">Upload</button> -->
                                                 </span>
                                             </div>
                                         </div>
