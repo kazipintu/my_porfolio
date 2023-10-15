@@ -18,16 +18,70 @@
         $git = $_POST['git'];
         $research = $_POST['research'];
         $address = $_POST['address'];
+       
         // var_dump($_FILES['image']) ;
+        $targetDir = "uploads/";
+        $targetFile = $targetDir . basename($_FILES["image"]["name"]); 
+        
+        $uploadOk = 1;
+
+        if(isset($_POST["submit"])) {
+            $check = getimagesize($_FILES["image"]["tmp_name"]);
+            
+            
+            if($check !== false) {
+                // echo "File is an image - " . $check["mime"] . ".";
+                $uploadOk = 1;
+            } else {
+                // echo "File is not an image.";
+                $uploadOk = 0;
+            }
+        }
+
+        if (file_exists($targetFile)) {
+            echo "Sorry, the file already exists.";
+            $uploadOk = 0;
+        }
+
+        if ($_FILES["image"]["size"] > 5000000) { // 5MB limit
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        $allowedExtensions = array("jpg", "jpeg", "png", "gif");
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+        if (!in_array($imageFileType, $allowedExtensions)) {
+            echo "Sorry, only JPG, JPEG, PNG, and GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        }
+
+        else{
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+                    echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
+
+                    // Display the uploaded image
+                    echo '<img src="' . $targetFile . '" alt="Uploaded Image">';
+            }   else {
+                    echo "Sorry, there was an error uploading your file.";
+            }
+        }
+
+        var_dump($imageFileType);
+        // die();
         $image_data = $_FILES["image"]["tmp_name"];
-        $image_name = mysqli_real_escape_string($con, $_FILES["image"]["name"]);
-        // var_dump($image_name);
+        // $image_name = mysqli_real_escape_string($con, $_FILES["image"]["name"]);
+        // // var_dump($image_name);
         if($num_rows>0){
             $status = "You have already data in your database";
         }
         
         else{
-            $sql = "INSERT INTO about (name, email, phone, address, linkedin, facebook, github, research, image,image_data) VALUES ('$name','$email','$phone','$address','$linkdin','$fb','$git','$research','$image_name','$image_data')";
+            $sql = "INSERT INTO about (name, email, phone, address, linkedin, facebook, github, research, image,image_data) VALUES ('$name','$email','$phone','$address','$linkdin','$fb','$git','$research','$targetFile','$image_data')";
             $query = mysqli_query($con,$sql);
             if($query){
                 $status = "Inserted Successfully";
