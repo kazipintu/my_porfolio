@@ -18,6 +18,7 @@
         $git = $_POST['git'];
         $research = $_POST['research'];
         $address = $_POST['address'];
+        $description = $_POST['description'];
        
         // var_dump($_FILES['image']) ;
         $targetDir = "uploads/";
@@ -81,7 +82,7 @@
         }
         
         else{
-            $sql = "INSERT INTO about (name, email, phone, address, linkedin, facebook, github, research, image,image_data) VALUES ('$name','$email','$phone','$address','$linkdin','$fb','$git','$research','$targetFile','$image_data')";
+            $sql = "INSERT INTO about (name, email, phone, address, linkedin, facebook, github, research, image,image_data,description) VALUES ('$name','$email','$phone','$address','$linkdin','$fb','$git','$research','$targetFile','$image_data','$description')";
             $query = mysqli_query($con,$sql);
             if($query){
                 $status = "Inserted Successfully";
@@ -174,13 +175,25 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleTextarea1">Address</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea name="address">
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4"
+                                                name="address"></textarea>
+
                                         </div>
+                                        <div class="form-group">
+                                            <label for="exampleTextarea1">Description</label>
+                                            <textarea class="form-control" id="description" name="description"
+                                                rows="4"></textarea>
+
+                                        </div>
+                                        <script>
+                                        // Replace the textarea with CKEditor
+                                        CKEDITOR.replace('description');
+                                        </script>
                                         <div class="form-group">
                                             <label>Image upload</label>
                                             <input type="file" name="img[]" class="file-upload-default">
                                             <div class="input-group col-xs-12">
-                                                <input type="file" class="form-control file-upload-info" 
+                                                <input type="file" class="form-control file-upload-info"
                                                     placeholder="Upload Image" name="image">
                                                 <span class="input-group-append">
                                                     <!-- <button class="file-upload-browse btn btn-primary"
@@ -189,7 +202,7 @@
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                                        
+
                                     </form>
                                 </div>
                             </div>
@@ -217,6 +230,7 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+
     <script src="admin_design/vendors/base/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- inject:js -->
@@ -226,7 +240,14 @@
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="admin_design/js/file-upload.js"></script>
-    <!-- End custom js for this page-->
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script>
+    $(document).ready(function() {
+        CKEDITOR.replace('description');
+    });
+    </script>
+    <!-- End custom js for this page
+    -->
 </body>
 
 </html>
