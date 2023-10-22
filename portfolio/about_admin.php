@@ -106,7 +106,7 @@
                                             <label>Image upload</label>
                                             <input type="file" name="img[]" class="file-upload-default">
                                             <div class="input-group col-xs-12">
-                                                <input type="text" class="form-control file-upload-info" disabled
+                                                <input type="file" class="form-control file-upload-info"
                                                     placeholder="Upload Image" name="image">
                                                 <span class="input-group-append">
                                                     <button class="file-upload-browse btn btn-primary"
